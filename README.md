@@ -5,11 +5,13 @@ This project contains various scripts and tools for the machine learning portion
 Directory structure:
 
 ```
-models    # code for machine learning models
-munging   # code for munging tasks, e.g. extracting sqlite database
-summary   # code for summarizing the data, including histograms and qq plots
-└─ plots  # directory with plot .pdfs
-common    # shared code
+models      # code for machine learning models
+data        # project data and scripts to manipulate it
+└─ munging  # scripts for munging and transforming the data
+munging     # code for munging tasks, e.g. extracting sqlite database
+summary     # code for summarizing the data, including histograms and qq plots
+└─ plots    # directory with plot .pdfs
+common      # shared code
 ```
 
 Rake tasks:

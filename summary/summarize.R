@@ -1,13 +1,16 @@
 #!/usr/local/bin/Rscript
 
+# NOTE: all paths in this file assume that it is being
+# run from the root directory of this project
+
 require("qualityTools") # for qqPlot
 
-taps <- read.table("../taps.tsv", header=TRUE, sep="\t")
+taps <- read.table("data/taps.tsv", header=TRUE, sep="\t")
 str(taps)
 summary(taps)
 
 # histograms
-pdf(file="plots/hist.pdf")
+pdf(file="summary/plots/hist.pdf")
 par(mfrow=c(3,5))
 #hist(taps$latency_1, main="latency_1", xlab="latency")
 hist(taps$latency_2, main="latency_2", xlab="latency")
@@ -28,7 +31,7 @@ hist(taps$size_5, main="size_5", xlab="size")
 dev.off()
 
 # qq plot
-pdf(file="plots/qqnorm.pdf")
+pdf(file="summary/plots/qqnorm.pdf")
 par(mfrow=c(2,2))
 qqPlot(taps$duration_1,"normal")
 #hist(taps$latency_1, "normal")

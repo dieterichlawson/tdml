@@ -1,9 +1,12 @@
 desc "Run summarize.R to produce plots and useful summaries of the data"
 task :summarize do
-  system './summarize.R'
+  system 'summary/summarize.R'
 end
 
 desc "Extract the sqlite database into a tsv"
 task :extract do
-  system 'munging/extract_sqlite.rb -d munging/tapdynamics.db > munging/taps.tsv'
+  print "Extracting data from SQLite to tsv... "
+  STDOUT.flush
+  system 'data/munging/extract_sqlite.rb -d data/tapdynamics.db > data/taps.tsv'
+  puts "Done!"
 end
