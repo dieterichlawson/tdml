@@ -16,6 +16,12 @@ common      # shared code
 Rake tasks:
 
 ```
-rake extract    # Extract the sqlite database into a tsv
-rake summarize  # Run summarize.R to produce plots and useful summaries of the data
+$ rake --tasks
+rake extract            # Run all extract tasks
+rake extract:csv        # Extract the sqlite database into a csv
+rake extract:tsv        # Extract the sqlite database into a tsv
+rake summarize          # Run all summarization scripts
+rake summarize:general  # Text summary including quantiles other basic stats
+rake summarize:hist     # Produce histograms of each feature
+rake summarize:qqplot   # Produce QQ norm plots for each feature
 ```
