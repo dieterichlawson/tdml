@@ -2,7 +2,7 @@
 
 require("qualityTools") # for qqPlot
 
-taps <- read.table("taps.tsv", header=TRUE, sep="\t")
+taps <- read.table("../taps.tsv", header=TRUE, sep="\t")
 str(taps)
 summary(taps)
 
