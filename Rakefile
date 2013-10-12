@@ -29,6 +29,7 @@ namespace "extract" do
     end
   end
 
+  desc "Clean the data, removing wrong attempts and useless variables"
   task :clean => :tsv do
     progress "Cleaning raw tsv" do
       system 'data/munging/clean.rb --in_file=data/taps.tsv > data/.tmptaps.tsv'
