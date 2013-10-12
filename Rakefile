@@ -19,23 +19,34 @@ namespace "summarize" do
 end
 
 desc "Run all extract tasks"
-task :extract  => ["extract:tsv", "extract:csv"]
-
+task :extract  => ["extract:clean"]
 namespace "extract" do
   
   desc "Extract the sqlite database into a tsv"
   task :tsv do
-    print "Extracting data from SQLite to tsv... "
-    STDOUT.flush
-    system 'data/munging/extract_sqlite.rb -d data/tapdynamics.db > data/taps.tsv'
-    puts "Done!"
+    progress "Extracting data from SQLite to tsv" do 
+      system 'data/munging/extract_sqlite.rb -d data/tapdynamics.db > data/taps.tsv'
+    end
   end
 
-  desc "Extract the sqlite database into a csv"
-  task :csv do
-    print "Extracting data from SQLite to tsv... "
-    STDOUT.flush
-    system 'data/munging/extract_sqlite.rb -c -d data/tapdynamics.db > data/taps.csv'
-    puts "Done!"
+  task :clean => :tsv do
+    progress "Cleaning raw tsv" do
+      system 'data/munging/clean.rb --in_file=data/taps.tsv > data/.tmptaps.tsv'
+      system 'mv data/.tmptaps.tsv data/taps.tsv'
+    end
   end
+
+  desc "Generate a csv from tsv file."
+  task :csv => :clean do
+    progress "Transforming data from tsv to csv" do
+      system "sed 's/	/,/g' data/taps.tsv > data/taps.csv"
+    end
+  end
+end
+
+def progress message, &blk
+  print "#{message}... "
+  STDOUT.flush
+  blk.call
+  puts "Done!"
 end
