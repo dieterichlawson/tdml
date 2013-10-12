@@ -1,5 +1,5 @@
 desc "Run all summarization scripts"
-task :summarize => ["summarize:general","summarize:hist", "summarize:qqplot"]
+task :summarize => ["extract:expand", "summarize:general","summarize:hist", "summarize:qqplot"]
 
 namespace "summarize" do
   desc "Text summary including quantiles other basic stats"

@@ -9,18 +9,11 @@ taps <- read.table("data/taps.tsv", header=TRUE, sep="\t")
 # qq plot
 pdf(file="summary/plots/qqnorm.pdf")
 par(mfrow=c(2,2))
-qqPlot(taps$latency_2, "normal")
-qqPlot(taps$latency_3, "normal")
-qqPlot(taps$latency_4, "normal")
-qqPlot(taps$latency_5, "normal")
-qqPlot(taps$duration_1, "normal")
-qqPlot(taps$duration_2, "normal")
-qqPlot(taps$duration_3, "normal")
-qqPlot(taps$duration_4, "normal")
-qqPlot(taps$duration_5, "normal")
-qqPlot(taps$size_1, "normal")
-qqPlot(taps$size_2, "normal")
-qqPlot(taps$size_3, "normal")
-qqPlot(taps$size_4, "normal")
-qqPlot(taps$size_5, "normal")
+for(i in names(taps)){
+  if(i == "pin" || i == "name") next;
+  qqPlot(taps[,which(names(taps)==i)], "normal", 
+         main=paste(i, "Q-Q plot", sep=" "),
+         xlab=paste("Quantiles from", i, sep=" "),
+         ylab="Quantiles from normal")
+}
 dev.off()
