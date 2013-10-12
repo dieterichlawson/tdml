@@ -8,8 +8,6 @@ taps <- read.table("data/taps.tsv", header=TRUE, sep="\t")
 # histograms
 pdf(file="summary/plots/hist.pdf")
 par(mfrow=c(3,5))
-#hist(taps$latency_1, main="latency_1", xlab="latency")
-hist(taps$latency_2, main="latency_2", xlab="latency")
 hist(taps$latency_2, main="latency_2", xlab="latency")
 hist(taps$latency_3, main="latency_3", xlab="latency")
 hist(taps$latency_4, main="latency_4", xlab="latency")
