@@ -1,5 +1,5 @@
 function [A] = normalize(A)
-%normalize center the data and give it unit variance
+%normalize make mean = 0, variance = 1
 %   subtracts the mean and divides by the standard deviation
 %   assumes cols are variables and rows are observations
   m = mean(A);

@@ -37,8 +37,17 @@ namespace "extract" do
     end
   end
 
+  desc "Expand the featureset by adding press to press and release to release latencies"
+  task :expand => :clean do
+    progress "Expanding featureset" do
+      system 'data/munging/expand.rb --in_file=data/taps.tsv > data/.tmptaps.tsv'
+      system 'mv data/.tmptaps.tsv data/taps.tsv'
+    end
+  end
+
+
   desc "Generate a csv from tsv file."
-  task :csv => :clean do
+  task :csv => :expand do
     progress "Transforming data from tsv to csv" do
       system "sed 's/	/,/g' data/taps.tsv > data/taps.csv"
     end
@@ -49,5 +58,5 @@ def progress message, &blk
   print "#{message}... "
   STDOUT.flush
   blk.call
-  puts "Done!"
+  puts "Done"
 end
