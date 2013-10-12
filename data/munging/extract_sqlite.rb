@@ -15,14 +15,24 @@ Settings.use :commandline
 Settings.define :db_file, flag: 'd', description: "SQlite3 database to transform", required: true
 Settings.define :include_wrong, flag: 'w', description: "Include wrong attempts (off by default)", type: :boolean, default: false
 Settings.define :csv, flag: 'c', description: "Output a .csv file instead of a .tsv file", type: :boolean, default: false
+Settings.define :pressure, flag: 'p', description: "Include the pressure variable (off by default)", type: :boolean, default: false
 Settings.resolve!
 
-COL_NAMES = ["name","pin","entered_pin",
+if Settings.pressure 
+  COL_NAMES = ["name","pin","entered_pin",
              "latency_1","duration_1","pressure_1","size_1",
              "latency_2","duration_2","pressure_2","size_2",
              "latency_3","duration_3","pressure_3","size_3",
              "latency_4","duration_4","pressure_4","size_4",
              "latency_5","duration_5","pressure_5","size_5"]
+else
+  COL_NAMES = ["name","pin","entered_pin",
+             "latency_1","duration_1","size_1",
+             "latency_2","duration_2","size_2",
+             "latency_3","duration_3","size_3",
+             "latency_4","duration_4","size_4",
+             "latency_5","duration_5","size_5"]
+end
 
 puts COL_NAMES.join "\t"
 
@@ -36,7 +46,12 @@ db.execute("SELECT * FROM people") do |person|
       #number entered
       number += tap[-1].to_s
       #data points
-      vector += tap[3..6]
+      vector += tap[3..4]
+      if Settings.pressure
+        vector += tap[5..6]
+      else
+        vector += [tap[6]]
+      end
     end
     next unless number[0..-3].to_i == person[2] || Settings.include_wrong
     vector.insert(2,number)
