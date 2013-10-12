@@ -1,4 +1,4 @@
-## Tap Dynamics machine learning
+## Tap Dynamics ML
 
 This project contains various scripts and tools for the machine learning portion of the Tap Dynamics project
 
