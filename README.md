@@ -1,6 +1,6 @@
-## Tapdynamics machine learning project
+## Tap Dynamics machine learning
 
-This project contains various scripts and tools for the machine learning portion of the tapdynamics project
+This project contains various scripts and tools for the machine learning portion of the Tap Dynamics project
 
 Directory structure:
 
