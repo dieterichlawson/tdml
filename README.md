@@ -8,7 +8,7 @@ Directory structure:
 models       # code for machine learning models
 data         # project data
 ├─ munging   # scripts for extracting and cleaning the data
-└─ transform # scripts for adding/removing columns, and other transforms
+└─ transform # scripts for data transforms, including adding/removing columns, etc...
 summary      # code for summarizing the data, including histograms and qq plots
 └─ plots     # directory with plot .pdfs
 common       # shared code
