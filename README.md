@@ -27,3 +27,5 @@ rake summarize:general  # Text summary including quantiles other basic stats
 rake summarize:hist     # Produce histograms of each feature
 rake summarize:qqplot   # Produce QQ norm plots for each feature
 ```
+
+Running `rake extract:expand` will extract, clean, and expand your data. You can also run `rake extract:csv` if you need a csv. You should generate the data before running any summarization tasks.
