@@ -18,8 +18,9 @@ Rake tasks:
 ```
 $ rake --tasks
 rake extract            # Run all extract tasks
-rake extract:clean      # Clean the data, removing wrong attempts and useless variables
 rake extract:tsv        # Extract the sqlite database into a tsv
+rake extract:clean      # Clean the data, removing wrong attempts and useless variables
+rake extract:expand     # Expand the featureset by adding press to press and release to release latencies
 rake extract:csv        # Generate a csv from tsv file
 rake summarize          # Run all summarization scripts
 rake summarize:general  # Text summary including quantiles other basic stats
