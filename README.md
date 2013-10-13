@@ -14,9 +14,8 @@ summary      # code for summarizing the data, including histograms and qq plots
 common       # shared code
 ```
 
-We use rake to make it easy to organize and run the various scripts that make up the project. Our rake namespace is organized similarly to our directory namespace, with few differences.
+We use `rake` to make it easy to organize and run the various scripts that make up the project. Our rake namespace is organized similarly to our directory namespace, with few differences.
 
-Rake tasks:
 ```
 $ rake --tasks
 rake extract            # Run all extract tasks
