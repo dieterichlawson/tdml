@@ -29,4 +29,4 @@ rake transform:csv      # Generate a csv from current tsv file
 rake transform:expand   # Expand the featureset by adding press to press and release to release latencies
 ```
 
-Running `rake extract:expand` will extract, clean, and expand your data. You can also run `rake extract:csv` if you need a csv. You should generate the data before running any summarization tasks.
+A good way to get started is by running `rake transform:expand`, which will extract, clean, and expand your data. This gives you a tsv, but you can also run `rake extract:csv` if you need a csv. You should generate the data before running any summarization tasks.
