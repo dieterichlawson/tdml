@@ -1,12 +1,13 @@
-function [ min, max, mean, temp ] = computeVariability( EnrollmentAttempts)
-%COMPUTE_VARIABILITY This function computes the variability of a set of
+function [ min, max, mean, temp ] = compute_variability(EnrollmentAttempts)
+%compute_variability This function computes the 'variability' of a set of
 %enrollment attempts
+%
 %   Accepts a set of enrollment attempts and computes various statistics
 %   over them, such as the mean minimum and max distances between pairs,
 %   the mean distance between all pairs, and 'temp', the mean distance to
 %   the enrollment attempt that is closest to all other attempts. These
 %   statistics are used in the Euclidean Distance classifier to measure
-%   variability
+%   the variability of a person's tap biometrics.
 minmean = [Inf('double') -1];
 min = 0; max = 0; mean = 0;
 for i=1:size(EnrollmentAttempts,1)
