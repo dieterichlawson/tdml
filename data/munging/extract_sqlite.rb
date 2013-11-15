@@ -25,16 +25,18 @@ COL_NAMES = ["name","pin","entered_pin",
 puts COL_NAMES.join "\t"
 
 db = SQLite3::Database.new Settings.db_file
-db.execute("SELECT * FROM people") do |person|
-  db.execute("SELECT * FROM attempts WHERE person_id=#{person[1]}") do |attempt|
+db.execute("SELECT id, username, pin FROM people") do |person|
+  db.execute("SELECT id FROM attempts WHERE person_id=#{person[0]}") do |attempt|
     #username and pin
-    vector = [person[0],person[2]]
+    vector = person[1..2]
     number = ""
-    db.execute("SELECT * FROM taps WHERE attempt_id=#{attempt[1]} ORDER BY tapNumber DESC") do |tap|
+    db.execute("SELECT latency, duration, pressure, size, tapNumber, numberPressed FROM taps WHERE attempt_id=#{attempt[0]} ORDER BY tapNumber DESC") do |tap|
+      # skip if its a double-enter weirdness TODO:WTF
+      next if tap[-1] == -1 && vector.length == COL_NAMES.length - 1
       #number entered
-      number += tap[-1].to_s
+      number += tap[-1].to_s unless tap[-1] == -1
       #data points
-      vector += tap[3..6]
+      vector += tap[0..3]
     end
     vector.insert(2,number)
     puts vector.join "\t"

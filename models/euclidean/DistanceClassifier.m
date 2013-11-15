@@ -134,4 +134,3 @@ classdef DistanceClassifier
         end
     end
 end
-

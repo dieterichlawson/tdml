@@ -1,5 +1,5 @@
 desc "Run all summarization scripts"
-task :summarize => ["extract:expand", "summarize:general","summarize:hist", "summarize:qqplot"]
+task :summarize => ["transform:expand", "summarize:general","summarize:hist", "summarize:qqplot"]
 
 namespace "summarize" do
   desc "Text summary including quantiles other basic stats"
@@ -40,7 +40,7 @@ end
 
 namespace "transform" do
   desc "Expand the featureset by adding press to press and release to release latencies"
-  task :expand => :clean do
+  task :expand => ["extract:clean"] do
     progress "Expanding featureset" do
       system 'data/transform/expand.rb --in_file=data/taps.tsv > data/.tmptaps.tsv'
       system 'mv data/.tmptaps.tsv data/taps.tsv'
