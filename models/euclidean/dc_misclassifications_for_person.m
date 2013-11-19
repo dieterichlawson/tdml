@@ -1,10 +1,15 @@
 function res = dc_misclassifications_for_person(person_data, others_data, thresholds, norm_type, features)
 %UNTITLED4 Summary of this function goes here
 %   Detailed explanation goes here
-    ratio = 1;
-    person_weight = (ratio*size(others_data,1))/size(person_data,1);
+    max_lockout_perc = 0.15;
     cp = test_dc_for_person(person_data, others_data, thresholds, norm_type, features);
-    num_wrong = cp.diagnosticTable(1,2)*person_weight + cp.diagnosticTable(2,1);
-    res = num_wrong(1);
+    fp_rate = cp.diagnosticTable(2,1)/(cp.diagnosticTable(2,1)+cp.diagnosticTable(1,1));
+    fn_rate = cp.diagnosticTable(1,2)/(cp.diagnosticTable(1,2)+cp.diagnosticTable(2,2));
+   
+    if fn_rate > max_lockout_perc
+        res = Inf('double');
+    else
+        res = 2*fp_rate + fn_rate;
+    end
 end
 

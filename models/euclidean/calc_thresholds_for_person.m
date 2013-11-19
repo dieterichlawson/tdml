@@ -3,9 +3,7 @@ function x = calc_thresholds_for_person(person_data, others_data, norm_type, fea
 %   Detailed explanation goes here
     x0 = [10 10 10 10];
     fun = @(x) dc_misclassifications_for_person(person_data, others_data, x, norm_type, features);
-    options = optimset('Display','iter','MaxIter',50,'MaxFunEvals',60,'TolFun',10,'PlotFcns',@optimplotfval);
+    options = optimset('Display','iter','MaxIter',30,'MaxFunEvals',100,'TolFun',10,'PlotFcns',@optimplotfval);
     [x, fval, exitflag, output] = fminsearch(fun, x0,options);
-    fval
-    output
 end
 

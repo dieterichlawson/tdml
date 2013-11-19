@@ -13,7 +13,7 @@ function cp = test_dc_for_person(person_data, others_data, thresholds, norm_type
        dc = DistanceClassifier(person_data(train,:),norm_type, num_taps);
        test_data = [others_data ; person_data(test,:)];
        classes = dc.classify(test_data, features, thresholds);
-       classperf(cp,classes,logical([ones(size(others_data,1),1); test]));
+       classperf(cp,classes, logical([ones(size(others_data,1),1); test]));
     end
 end
  
