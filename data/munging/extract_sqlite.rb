@@ -15,6 +15,7 @@ Settings.use :commandline
 Settings.define :db_file, flag: 'd', description: "SQlite3 database to transform", required: true
 Settings.resolve!
 
+ENTER_VALS = [-1, 100]
 COL_NAMES = ["name","pin","entered_pin",
              "latency_1","duration_1","pressure_1","size_1",
              "latency_2","duration_2","pressure_2","size_2",
@@ -30,11 +31,11 @@ db.execute("SELECT id, username, pin FROM people") do |person|
     #username and pin
     vector = person[1..2]
     number = ""
-    db.execute("SELECT latency, duration, pressure, size, tapNumber, numberPressed FROM taps WHERE attempt_id=#{attempt[0]} ORDER BY tapNumber DESC") do |tap|
+    db.execute("SELECT latency, duration, pressure, size, tapNumber, numberPressed FROM taps WHERE attempt_id=#{attempt[0]} ORDER BY tapNumber ASC") do |tap|
       # skip if its a double-enter weirdness TODO:WTF
-      next if tap[-1] == -1 && vector.length == COL_NAMES.length - 1
+      next if ENTER_VALS.include? tap[-1] && vector.length == COL_NAMES.length - 1
       #number entered
-      number += tap[-1].to_s unless tap[-1] == -1
+      number += tap[-1].to_s unless ENTER_VALS.include? tap[-1]
       #data points
       vector += tap[0..3]
     end
