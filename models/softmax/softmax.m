@@ -8,7 +8,7 @@ label_vector = grp2idx(ids);
 
 % data is now a matrix with the numerical labels (instead of id's) and the
 % data for each attempt on a row
-data = [label_vector data_with_names.data];
+data = [label_vector data_with_names.data(:,1:end-8)];
 labels = unique(label_vector);
 
 % Training Softmax requires a matrix consisting of the first 15 attempts for each user (training_data)
@@ -17,6 +17,7 @@ training_data = [];
 training_labels = [];
 % Test data is final 15 taps
 test_data = [];
+test_labels = [];
 
 % Create matrix of user training data and test data
 %for i = labels'
@@ -35,10 +36,11 @@ for i = labels'
 	
 	test_data_i = data_for_i(16:end, :);
     test_data = [test_data; test_data_i];
+    %test_labels = [test_labels; labels_for_i(16:end)];
 end
 
 softmax_coefficients = mnrfit(training_data, training_labels);
 softmax_probabilities = mnrval(softmax_coefficients, test_data);
-trans_probabilities = softmax_probabilities';
-[C,I] = max(trans_probabilities);
-disp(I)
+[largest_probabilities,user_predictions] = max(softmax_probabilities, [], 2);
+%classperf(
+disp(user_predictions)
