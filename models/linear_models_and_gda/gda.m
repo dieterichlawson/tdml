@@ -61,8 +61,8 @@ for p = pins'
         true_test_labels = [true_test_labels; user_i(16:end, 1)];
     end
     
-    gda_fp = 0;
-    gda_fn = 0;
+    gda_fp_for_p = [];
+    gda_fn_for_p = [];
     
     % Make and test classifier for each user
     for i = users_pin_p'
@@ -88,6 +88,8 @@ for p = pins'
         % lnr_pred = predict(lnr_mdl, test_data);
         gda_pred = predict(gda_mdl, test_data);
         
+        user_i_fp = 0;
+        user_i_fn = 0;
         % Evaluate against true_test_labels
         % lnr_errors = 0;
         for j=1:length(gda_pred)
@@ -95,11 +97,11 @@ for p = pins'
                 % If we labeled an incorrect 0, then we incorrectly said
                 % example was an attacker (false positive)
                 if(gda_pred(j) == 0)
-                    gda_fp = gda_fp + 1;
+                    user_i_fp = user_i_fp + 1;
                     % Else, we incorrectly labeled an example as 1 (incorrectly
                     % said example was true user - false negative)
                 else
-                    gda_fn = gda_fn + 1;
+                    user_i_fn = user_i_fn + 1;
                 end
             end
             
@@ -108,17 +110,16 @@ for p = pins'
             % end
         end
         
+        gda_fp_for_p = [gda_fp_for_p, user_i_fp/length(gda_pred)];
+        gda_fn_for_p = [gda_fn_for_p, user_i_fn/length(gda_pred)];
         % lnr_error_rate = lnr_errors / length(lnr_pred);
     end
     
-    gda_error_rate = (gda_fn + gda_fp) / length(gda_pred);
-    gda_fn_rate = gda_fn / length(gda_pred);
-    gda_fp_rate = gda_fp / length(gda_pred);
-    disp(['For pin = ' num2str(p) ' the total error rate = ']);
-    disp(gda_error_rate);
-    disp(['For pin = ' num2str(p) ' the total fn rate (called attacker the true user) = ']);
-    disp(gda_fn_rate);
-    disp(['For pin = ' num2str(p) ' the total fp rate (caller a true user an attacker) = ']);
-    disp(gda_fp_rate);
+    % disp(['For pin = ' num2str(p) ' the total error rate = ']);
+    % disp(gda_error_rate);
+    disp(['For pin = ' num2str(p) ' the fn rates (called attacker the true user) = ']);
+    disp(gda_fn_for_p);
+    disp(['For pin = ' num2str(p) ' the fp rates (caller a true user an attacker) = ']);
+    disp(gda_fp_for_p);
     disp('**********************************************************');
 end
