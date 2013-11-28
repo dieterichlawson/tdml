@@ -5,25 +5,17 @@
 % like to test that a user's rhythm is consistent over time and that we can
 % recognize this rhythm over time.
 
-clear;
-data_with_names = importdata('../../data/taps.csv', ',',1);
-
-% From 2nd to final row (1st row is the category title 'name' in db), take 1st col (names)
-ids = data_with_names.textdata(2:end, 1);
-% Relabel the ids to numerical values (labels)
-user_label_vector = grp2idx(ids);
-
-% data is now a matrix with the numerical labels (instead of id's) and the
-% data for each attempt on a row. Need to subtract last 8 items in each row
-% to get rid of the redundant tap timing features
-data = [user_label_vector data_with_names.data(:,1:end-8)];
-users = unique(user_label_vector);
-
-% Get list of all unique pins in data
-pins = unique(data(:,2));
+% import_data;
 
 % for each pin, build a model for the pin and test each
 % user on the pin's model
+
+% Row 1 = pins
+% Row 2 = false positive rate
+% Row 3 = false negative rate
+evaluation_table = zeros(3,length(pins));
+pin_col = 1;
+
 for p = pins'
     % Training is first 15 attempts
     training_data = [];
@@ -49,7 +41,7 @@ for p = pins'
         % first 15 attempts for all user's with pin p into training_data and
         % then merging the remaining 15 attempts for all user's with pin p into
         % test_data
-        training_data_i = data_for_i(1:15,:);
+        training_data_i = data_for_i(2:15,:);
         training_data = [training_data; training_data_i];
         test_data_i = data_for_i(16:end, :);
         test_data = [test_data; test_data_i];
@@ -57,12 +49,14 @@ for p = pins'
         % user_i = homogenous vector containing purely the user's id for
         % each data example that has the user id and pin p
         user_i = data_pin_p(data_pin_p(:,1)==i, 1);
-        training_labels = [training_labels; user_i(1:15, 1)];
+        training_labels = [training_labels; user_i(2:15, 1)];
         true_test_labels = [true_test_labels; user_i(16:end, 1)];
     end
     
     gda_fp_for_p = [];
     gda_fn_for_p = [];
+    
+    
     
     % Make and test classifier for each user
     for i = users_pin_p'
@@ -115,11 +109,22 @@ for p = pins'
         % lnr_error_rate = lnr_errors / length(lnr_pred);
     end
     
-    % disp(['For pin = ' num2str(p) ' the total error rate = ']);
-    % disp(gda_error_rate);
-    disp(['For pin = ' num2str(p) ' the fn rates (called attacker the true user) = ']);
-    disp(gda_fn_for_p);
-    disp(['For pin = ' num2str(p) ' the fp rates (caller a true user an attacker) = ']);
-    disp(gda_fp_for_p);
-    disp('**********************************************************');
+    % Set the PIN entry for this pin
+    evaluation_table(1, pin_col) = p;
+    % Set the average FP rate for this pin
+    evaluation_table(2, pin_col) = sum(gda_fp_for_p)/length(gda_fp_for_p);
+    % Set the average FN rate for this pin
+    evaluation_table(3, pin_col) = sum(gda_fn_for_p)/length(gda_fp_for_p);
+    
+    %     disp(['For pin = ' num2str(p) ' the fn rates (called attacker the true user) = ']);
+    %     disp(gda_fn_for_p);
+    %     disp(['For pin = ' num2str(p) ' the fp rates (caller a true user an attacker) = ']);
+    %     disp(gda_fp_for_p);
+    %     disp('**********************************************************');
+    pin_col = pin_col + 1;
 end
+
+% format long;
+% disp('Evaluation table:');
+% disp(evaluation_table);
+% disp('**********************************************************');
