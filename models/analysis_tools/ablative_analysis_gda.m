@@ -2,8 +2,8 @@
 % determine which features are the most valuable.
 
 % Get results for the full feature set
-import_data;
-gda;
+run('../utilities/import_data');
+run('../gda/gda.m');
 original_eval = evaluation_table;
 
 % The general ablation process is to set the all columns to zero for the
@@ -21,7 +21,7 @@ while ablate_col <= total_col
     ablate_col = ablate_col + col_per_tap;
 end
 data = data(:,any(data,1));
-gda;
+run('../gda/gda.m');
 no_duration_eval = evaluation_table;
 
 % Create data matrix with all SIZES removed
@@ -32,7 +32,7 @@ while ablate_col <= total_col
     ablate_col = ablate_col + col_per_tap;
 end
 data = data(:,any(data,1));
-gda;
+run('../gda/gda.m');
 no_size_eval = evaluation_table;
 
 % Create data matrix with all LATENCIES removed
@@ -43,8 +43,22 @@ while ablate_col <= total_col
     ablate_col = ablate_col + col_per_tap;
 end
 data = data(:,any(data,1));
-gda;
+run('../gda/gda.m');
 no_latency_eval = evaluation_table;
 
-ablative_analysis_table = [original_eval; no_duration_eval; no_size_eval; no_latency_eval];
+% Create data matrix with all LATENCIES AND DURATIONS removed
+data = original_data;
+ablate_lat = 5;
+ablate_dur = 3;
+while ablate_lat <= total_col
+    data(:,ablate_lat) = 0;
+    data(:,ablate_dur) = 0;
+    ablate_lat = ablate_lat + col_per_tap;
+    ablate_dur = ablate_dur + col_per_tap;
+end
+data = data(:,any(data,1));
+run('../gda/gda.m');
+only_size = evaluation_table;
+
+ablative_analysis_table = [original_eval; no_duration_eval; no_size_eval; no_latency_eval; only_size];
 csvwrite('ablative_analysis.csv', ablative_analysis_table);

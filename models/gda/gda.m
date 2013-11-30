@@ -4,8 +4,11 @@
 % is that the last 15 taps were done after a 30 second pause, so we would
 % like to test that a user's rhythm is consistent over time and that we can
 % recognize this rhythm over time.
+% NOTE: import_data MUST BE CALLED BEFORE THIS SCRIPT
+% (../utilities/import_data)
 
-% import_data;
+addpath('../utilities');
+addpath('../analysis_tools');
 
 % for each pin, build a model for the pin and test each
 % user on the pin's model
@@ -26,31 +29,32 @@ for p = pins'
     training_labels = [];
     true_test_labels = [];
     
-    % data_pin_p = all data rows for people with pin p
-    data_pin_p = data(data(:,2) == p,:);
-    % users_pin_p = unique list of users with pin p
-    users_pin_p = unique(data_pin_p(:,1));
+    [data_pin_p, users_pin_p] = get_data_for_pin(data, p);
     
     % Make training and test data for pin p
     for i = users_pin_p'
         % data for person "i" finds all rows that belong to user i
         % and then takes col's 3 -> end (1 = name, 2 = pin)
-        data_for_i = data_pin_p(data_pin_p(:,1)==i, 3:end);
+        data_for_i = get_features_for_user(data_pin_p, i);
         
         % Build training and test data for this particular pin by merging the
         % first 15 attempts for all user's with pin p into training_data and
         % then merging the remaining 15 attempts for all user's with pin p into
         % test_data
-        training_data_i = data_for_i(2:15,:);
-        training_data = [training_data; training_data_i];
+        training_data_i = data_for_i(1:15,:);
         test_data_i = data_for_i(16:end, :);
-        test_data = [test_data; test_data_i];
         
         % user_i = homogenous vector containing purely the user's id for
         % each data example that has the user id and pin p
         user_i = data_pin_p(data_pin_p(:,1)==i, 1);
-        training_labels = [training_labels; user_i(2:15, 1)];
+        training_label_i = user_i(1:15, 1);
+        
+        % [training_data_i, training_label_i] = remove_outliers(training_data_i, training_label_i);
+        
+        training_data = [training_data; training_data_i];
+        training_labels = [training_labels; training_label_i];
         true_test_labels = [true_test_labels; user_i(16:end, 1)];
+        test_data = [test_data; test_data_i];
     end
     
     gda_fp_for_p = [];
