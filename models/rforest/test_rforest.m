@@ -38,6 +38,7 @@ for pin = pins'
         %get(cp)
     end
     conf_mat
-    disp(['fn_rate = ' conf_mat(1,2)/(sum(conf_fat(:,1))]);
-    disp(['fp_rate = ' conf_mat(2,1)/(sum(conf_fat(:,2))]);
+    fp_rate =  conf_mat(2,1)/(sum(conf_mat(:,1)))
+    fn_rate =  conf_mat(1,2)/(sum(conf_mat(:,2)))
+    correct_rate = (conf_mat(1,1)+conf_mat(2,2))/(sum(sum(conf_mat)))
 end
