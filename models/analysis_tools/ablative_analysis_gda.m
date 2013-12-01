@@ -2,7 +2,7 @@
 % determine which features are the most valuable.
 
 % Get results for the full feature set
-run('../utilities/import_data');
+run('../util/import_data');
 run('../gda/gda.m');
 original_eval = evaluation_table;
 

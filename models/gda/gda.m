@@ -5,9 +5,9 @@
 % like to test that a user's rhythm is consistent over time and that we can
 % recognize this rhythm over time.
 % NOTE: import_data MUST BE CALLED BEFORE THIS SCRIPT
-% (../utilities/import_data)
+% (../util/import_data)
 
-addpath('../utilities');
+addpath('../util');
 addpath('../analysis_tools');
 
 % for each pin, build a model for the pin and test each
