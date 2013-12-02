@@ -16,7 +16,7 @@ models              # code for machine learning models (mostly MATLAB)
 ├── analysis_tools  # scripts for model diagnostics like ablative analysis
 ├── euclidean       # a euclidean distance classifier from the literature
 ├── gda             # gaussian discriminant analysis classifier
-├── rforest         # random decision forest classifier
+├── rforest         # random forest classifier
 ├── softmax         # softmax regression classifier
 └── util            # MATLAB utils (e.g. loading data)
 summary             # R scripts for summarizing the data (histograms, qqplots, etc...)
