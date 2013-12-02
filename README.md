@@ -36,6 +36,7 @@ rake transform:euclid   # Expand the featureset with the Euclidean Distance clas
 rake summarize          # Run all summarization scripts
 rake summarize:general  # Text summary including quantiles other basic stats
 rake summarize:hist     # Produce histograms of each feature
+rake summarize:pins     # Produce stats on data collected for specific pins
 rake summarize:qqplot   # Produce QQ norm plots for each feature
 ```
 

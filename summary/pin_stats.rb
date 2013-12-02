@@ -6,7 +6,7 @@ require 'awesome_print'
 require 'set'
 
 Settings.use :commandline
-Settings.define :file, flag: 'd', description: "TSV file", required: true
+Settings.define :in_file, flag: 'f', description: "TSV file", required: true
 Settings.resolve!
 
 NAME_COL = 0
@@ -15,7 +15,7 @@ PIN_COL = 1
 attempts_per_pin = {}
 people_per_pin = {}
 seen_header = false
-File.open(Settings.file, "r") do |file_handle|
+File.open(Settings.in_file, "r") do |file_handle|
   file_handle.each_line do |line|
     if !seen_header
       seen_header = true

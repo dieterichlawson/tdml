@@ -150,4 +150,9 @@ namespace "summarize" do
   task :qqplot do
     system 'summary/qqplot.R' 
   end
+
+  desc "Produce stats on data collected for specific pins"
+  task :pins => ["extract:clean"] do
+    puts `summary/pin_stats.rb --in_file=#{out_path(:extract,:clean)}`
+  end    
 end
