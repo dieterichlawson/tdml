@@ -2,7 +2,7 @@
 
 This project contains various scripts and tools for the machine learning portion of the Tap Dynamics project
 
-Directory structure:
+### Directory structure
 
 ```
 data                # project data
@@ -23,6 +23,7 @@ summary             # R scripts for summarizing the data (histograms, qqplots, e
 └── plots           # plot .pdfs
 ```
 
+### Doing Stuff
 We use `rake` to make it easy to organize and run the various scripts that make up the project. Our rake namespace is organized similarly to our directory namespace, with a few differences.
 
 ```
