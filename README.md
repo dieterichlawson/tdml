@@ -5,28 +5,38 @@ This project contains various scripts and tools for the machine learning portion
 Directory structure:
 
 ```
-models       # code for machine learning models
-data         # project data
-├─ munging   # scripts for extracting and cleaning the data
-└─ transform # scripts for data transforms, including adding/removing columns, etc...
-summary      # code for summarizing the data, including histograms and qq plots
-└─ plots     # directory with plot .pdfs
-common       # shared code
+data                # project data
+├── scratch         # holds intermediate data configurations
+├── gold            # holds final data, fit for use in classification
+├── scripts         # scripts to munge the data
+│   ├── extract     # scripts to extract data from raw form to reasonable baseline
+│   └── transform   # scripts for more advanced data transforms like adding features
+├── sql_databases   # contains the raw source data in SQL form
+models              # code for machine learning models (mostly MATLAB)
+├── analysis_tools  # various scripts for model diagnostics like ablative analysis
+├── euclidean       # a euclidean distance classifier from the literature
+├── gda             # gaussian discriminant analysis classifier
+├── rforest         # random decision forest classifier
+├── softmax         # softmax regression classifier
+└── util            # MATLAB utils (e.g. loading data)
+summary             # R scripts for summarizing the data (histograms, qqplots, etc...)
+└── plots           # plot .pdfs
 ```
 
 We use `rake` to make it easy to organize and run the various scripts that make up the project. Our rake namespace is organized similarly to our directory namespace, with few differences.
 
 ```
 $ rake --tasks
+rake clean              # Remove all output files
 rake extract            # Run all extract tasks
-rake extract:raw        # Extract the sqlite database into a tsv
 rake extract:clean      # Clean the data, removing wrong attempts and useless variables
+rake extract:raw        # Extract the sqlite database into a tsv
+rake transform:accel    # Compute and add the accelerometer features
+rake transform:euclid   # Expand the featureset by adding features for the Euclidean Distance classifier
 rake summarize          # Run all summarization scripts
 rake summarize:general  # Text summary including quantiles other basic stats
 rake summarize:hist     # Produce histograms of each feature
 rake summarize:qqplot   # Produce QQ norm plots for each feature
-rake transform:csv      # Generate a csv from current tsv file
-rake transform:expand   # Expand the featureset by adding press to press and release to release latencies
 ```
 
 A good way to get started is by running `rake transform:expand`, which will extract, clean, and expand your data. This gives you a tsv, but you can also run `rake transform:csv` if you need a csv. You should generate the data before running any summarization tasks.
