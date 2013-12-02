@@ -12,8 +12,10 @@ require 'configliere'
 require 'sqlite3'
 
 Settings.use :commandline
-Settings.define :db_file, flag: 'd', description: "SQlite3 database to transform", required: true
+Settings.define :in_file, flag: 'f', description: "SQlite3 database to transform", required: true
 Settings.resolve!
+
+ACCEL_DELIM = "ACCEL"
 
 ENTER_VALS = [-1, 100]
 COL_NAMES = ["name","pin","entered_pin",
@@ -25,22 +27,26 @@ COL_NAMES = ["name","pin","entered_pin",
 
 puts COL_NAMES.join "\t"
 
-db = SQLite3::Database.new Settings.db_file
+db = SQLite3::Database.new Settings.in_file
 db.execute("SELECT id, username, pin FROM people") do |person|
   db.execute("SELECT id FROM attempts WHERE person_id=#{person[0]}") do |attempt|
     #username and pin
     vector = person[1..2]
     number = ""
-    db.execute("SELECT latency, duration, pressure, size, tapNumber, numberPressed FROM taps WHERE attempt_id=#{attempt[0]} ORDER BY tapNumber ASC") do |tap|
+    accelerometer = []
+    db.execute("SELECT id, numberPressed, latency, duration, pressure, size FROM taps WHERE attempt_id=#{attempt[0]} ORDER BY tapNumber ASC") do |tap|
       # skip if its a double-enter weirdness TODO:WTF
       next if ENTER_VALS.include? tap[-1] && vector.length == COL_NAMES.length - 1
       #number entered
-      number += tap[-1].to_s unless ENTER_VALS.include? tap[-1]
+      number += tap[1].to_s unless ENTER_VALS.include? tap[1]
       #data points
-      vector += tap[0..3]
+      vector += tap[2..5]
+      db.execute("SELECT x, y, z FROM accelerometer_data WHERE tap_id=#{tap[0]} ORDER BY readingNumber ASC") do |accel_data|
+        accelerometer += accel_data 
+      end
     end
     vector.insert(2,number)
+    vector = vector + [ACCEL_DELIM] + accelerometer
     puts vector.join "\t"
   end
 end
-

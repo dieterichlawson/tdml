@@ -25,13 +25,14 @@ ENTERED_PIN = 2
 PRESSURE_COLS = [5,9,13,17,21]
 LATENCY_1_COL = 3
 DELIM = "\t"
+ACCEL_DELIM = "ACCEL"
 
 cols_to_rem = []
 cols_to_rem += PRESSURE_COLS unless Settings.keep_pressure
 cols_to_rem += [LATENCY_1_COL] unless Settings.keep_latency_1
 cols_to_rem += [ENTERED_PIN] unless Settings.keep_wrong
 cols_to_rem = cols_to_rem.sort.reverse
-num_pins = {}
+
 File.open(Settings.in_file, "r") do |file_handle|
     seen_header = false
     file_handle.each_line do |line|
@@ -40,15 +41,13 @@ File.open(Settings.in_file, "r") do |file_handle|
         $stderr.puts "#{cols[0]} entered their pin wrong... tossing"
         next
       end
-      if cols.length  != IN_NUM_COLS
+     
+      length = cols.index ACCEL_DELIM
+      if seen_header && length  != IN_NUM_COLS
         $stderr.puts "#{cols[0]} is weird (too many cols)"
         next
       end
-      if !num_pins.include? cols[0]
-        num_pins[cols[0]] = 0
-      end
-      num_pins[cols[0]] +=1
-
+      
       cols_to_rem.each do |col|
         cols.delete_at col
       end
@@ -56,4 +55,3 @@ File.open(Settings.in_file, "r") do |file_handle|
       seen_header = true
     end
 end
-$stderr.puts num_pins
