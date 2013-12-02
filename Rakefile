@@ -1,29 +1,37 @@
+DATA_PATH = "data"
+DATA_CATEGORIES = ["scratch", "gold"]
+SCRIPT_PATH = "#{DATA_PATH}/scripts"
+
 # information on task input and output
 $paths = {
   extract: { 
     raw: {
-      in: "tapdynamics.db", 
-      out: "taps_raw.tsv"
+      path: "scratch",
+      in_file: "tapdynamics.db", 
+      out: "taps_raw.tsv",
     }, 
     clean: {
-      in:  "taps_raw.tsv", 
-      out:  "taps_clean.tsv"
+      path: "scratch",
+      in_ns: :extract,
+      in_task: :raw,
+      out:  "taps_clean.tsv",
     },
   },
   transform: {
     euclid: {
-      in: "taps_clean.tsv",
-      out:  "taps_euclid.csv"
+      path: "gold",
+      in_ns: :extract,
+      in_task: :clean,
+      out:  "taps_euclid.csv",
     },
     accel: {
-      in: "taps_clean.tsv",
-      out: "taps_accel.tsv"
+      path: "gold",
+      in_ns: :extract,
+      in_task: :clean,
+      out: "taps_accel.tsv",
     },
   },
 }
-
-DATA_PATH = "data"
-SCRIPT_PATH = "#{DATA_PATH}/munging"
 
 # task helper fns
 def script_path ns, task
@@ -31,11 +39,15 @@ def script_path ns, task
 end
 
 def in_path ns, task
-  "#{DATA_PATH}/#{$paths[ns][task][:in]}"
+  if $paths[ns][task].has_key? :in_file
+    return "#{DATA_PATH}/#{$paths[ns][task][:in_file]}"
+  else
+    return out_path($paths[ns][task][:in_ns], $paths[ns][task][:in_task])
+  end
 end
 
 def out_path ns, task
-  "#{DATA_PATH}/#{$paths[ns][task][:out]}"
+  "#{DATA_PATH}/#{$paths[ns][task][:path]}/#{$paths[ns][task][:out]}"
 end
 
 def task_cmd ns, task
@@ -64,7 +76,8 @@ def run_task ns, task, msg
   end
 end
 
-# CLEAN UP OUTPUT
+# CLEAN UP OUTPUT TASK
+
 desc "Remove all output files"
 task :clean do
   progress "Removing all output files" do
@@ -101,9 +114,13 @@ namespace "transform" do
     progress "Expanding featureset with euclidean classifier features" do
       ns = :transform
       task = :euclid
-      system "#{script_path(ns,task)} --in_file=#{in_path(ns,task)} > #{DATA_PATH}/taps_euclid.tsv"
-      system "sed 's/	/,/g' #{DATA_PATH}/taps_euclid.tsv > #{DATA_PATH}/taps_euclid.csv"
-      system "rm #{DATA_PATH}/taps_euclid.tsv"
+      in_file = in_path(ns,task)
+      out_file = out_path(ns,task)
+      out_tsv = out_file.gsub(/csv/,"tsv")
+      out_tsv.gsub!(/gold/,"scratch")
+      system "#{script_path(ns,task)} --in_file=#{in_file} > #{out_tsv}"
+      system "sed 's/	/,/g' #{out_tsv} > #{out_file}"
+      system "rm #{out_tsv}"
     end
   end
 
