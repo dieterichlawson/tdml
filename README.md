@@ -13,7 +13,7 @@ data                # project data
 │   └── transform   # scripts for more advanced data transforms like adding features
 ├── sql_databases   # contains the raw source data in SQL form
 models              # code for machine learning models (mostly MATLAB)
-├── analysis_tools  # various scripts for model diagnostics like ablative analysis
+├── analysis_tools  # scripts for model diagnostics like ablative analysis
 ├── euclidean       # a euclidean distance classifier from the literature
 ├── gda             # gaussian discriminant analysis classifier
 ├── rforest         # random decision forest classifier
