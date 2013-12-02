@@ -11,7 +11,7 @@ data                # project data
 ├── scripts         # scripts to munge the data
 │   ├── extract     # scripts to extract data from raw form to reasonable baseline
 │   └── transform   # scripts for more advanced data transforms like adding features
-├── sql_databases   # contains the raw source data in SQL form
+└── sql_databases   # contains the raw source data in SQL form
 models              # code for machine learning models (mostly MATLAB)
 ├── analysis_tools  # scripts for model diagnostics like ablative analysis
 ├── euclidean       # a euclidean distance classifier from the literature
