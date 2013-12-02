@@ -23,7 +23,7 @@ summary             # R scripts for summarizing the data (histograms, qqplots, e
 └── plots           # plot .pdfs
 ```
 
-### Doing Stuff
+### Rake Tasks
 We use `rake` to make it easy to organize and run the various scripts that make up the project. Our rake namespace is organized similarly to our directory namespace, with a few differences.
 
 ```
@@ -43,3 +43,12 @@ rake summarize:qqplot   # Produce QQ norm plots for each feature
 
 A good way to get started is by running `rake transform:accel`, which will extract, clean, and add accelerometer features to your data, giving you a good baseline dataset for use with the classification algorithms. You should generate the data before running any summarization tasks.
 
+### Dependencies
+
+#### Ruby Gems
+* Configliere: https://github.com/infochimps-labs/configliere
+* Awesome Print: https://github.com/michaeldv/awesome_print
+* Descriptive Statistics: https://github.com/thirtysixthspan/descriptive_statistics 
+
+#### R Packages
+* qualityTools: http://cran.r-project.org/web/packages/qualityTools/index.html
