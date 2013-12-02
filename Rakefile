@@ -109,7 +109,7 @@ end
 # TRANSFORM DATA TASKS
 
 namespace "transform" do
-  desc "Expand the featureset by adding features for the Euclidean Distance classifier"
+  desc "Expand the featureset with the Euclidean Distance classifier features"
   task :euclid => ["extract:clean"] do
     progress "Expanding featureset with euclidean classifier features" do
       ns = :transform

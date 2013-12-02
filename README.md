@@ -32,7 +32,7 @@ rake extract            # Run all extract tasks
 rake extract:clean      # Clean the data, removing wrong attempts and useless variables
 rake extract:raw        # Extract the sqlite database into a tsv
 rake transform:accel    # Compute and add the accelerometer features
-rake transform:euclid   # Expand the featureset by adding features for the Euclidean Distance classifier
+rake transform:euclid   # Expand the featureset with the Euclidean Distance classifier features
 rake summarize          # Run all summarization scripts
 rake summarize:general  # Text summary including quantiles other basic stats
 rake summarize:hist     # Produce histograms of each feature
