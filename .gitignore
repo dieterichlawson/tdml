@@ -1,5 +1,5 @@
 ## Project specific ##
-data/scratch
+data/scratch/*
 
 ## OS generated files ##
 .DS_Store
