@@ -46,9 +46,9 @@ A good way to get started is by running `rake transform:accel`, which will extra
 ### Dependencies
 
 #### Ruby Gems
-* Configliere: https://github.com/infochimps-labs/configliere
-* Awesome Print: https://github.com/michaeldv/awesome_print
-* Descriptive Statistics: https://github.com/thirtysixthspan/descriptive_statistics 
+* Configliere: https://github.com/infochimps-labs/configliere (used in all Ruby scripts)
+* Awesome Print: https://github.com/michaeldv/awesome_print (used for pin stats script)
+* Descriptive Statistics: https://github.com/thirtysixthspan/descriptive_statistics (used for accelerometer data)
 
 #### R Packages
-* qualityTools: http://cran.r-project.org/web/packages/qualityTools/index.html
+* qualityTools: http://cran.r-project.org/web/packages/qualityTools/index.html (used for producing qqplots)
