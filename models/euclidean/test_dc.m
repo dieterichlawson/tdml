@@ -1,5 +1,5 @@
 clear;
-imp = importdata('../../data/taps.csv',',',1);
+imp = importdata('../../data/gold/taps_euclid.csv',',',1);
 names = imp.textdata(2:end,1);
 all_data = [grp2idx(names) imp.data];
 

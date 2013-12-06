@@ -27,8 +27,10 @@ COL_NAMES = ["name","pin","entered_pin",
              "latency_4","duration_4","pressure_4","size_4",
              "latency_5","duration_5","pressure_5","size_5"]
 
+@hashes = {}
+
 def gen_pid file, person_id
-  Digest::SHA256.base64digest("#{file}#{person_id}")[0..-2]  
+  @hashes["#{file}#{person_id}"] ||= Digest::SHA256.base64digest("#{file}#{person_id}")[0..-2]  
 end
 
 files = Dir.glob(File.join(Settings.in_file, "*.db"))

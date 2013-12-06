@@ -10,24 +10,32 @@ $paths = {
       in_file: "sql_databases", 
       out: "taps_raw.tsv",
     }, 
-    clean: {
+  },
+  clean:{ 
+    columns: {
+      path: "scratch",
+      in_ns: :clean,
+      in_task: :pins,
+      out: "columns.tsv",
+    }, 
+    pins: {
       path: "scratch",
       in_ns: :extract,
       in_task: :raw,
-      out:  "taps_clean.tsv",
+      out:  "pins.tsv",
     },
   },
   transform: {
     euclid: {
       path: "gold",
-      in_ns: :extract,
-      in_task: :clean,
+      in_ns: :clean,
+      in_task: :columns,
       out:  "taps_euclid.csv",
     },
     accel: {
       path: "gold",
-      in_ns: :extract,
-      in_task: :clean,
+      in_ns: :clean,
+      in_task: :columns,
       out: "taps_accel.tsv",
     },
   },
@@ -77,7 +85,7 @@ def run_task ns, task, msg
 end
 
 # CLEAN UP OUTPUT TASK
-
+# TODO: fix namespace
 desc "Remove all output files"
 task :clean do
   progress "Removing all output files" do
@@ -86,6 +94,18 @@ task :clean do
         system "rm #{out_path(ns,task)}" if File.exist? out_path(ns, task)
       end
     end
+  end
+end
+
+namespace "clean" do
+  desc "Clean up the pins, removing bad attempts, etc..."
+  task :pins => ["extract:raw"]  do
+    run_task(:clean, :pins, "Cleaning up pins")
+  end
+
+  desc "Clean the data, removing wrong attempts and useless variables"
+  task :columns => :pins do
+    run_task(:clean , :columns, "Cleaning up columns")
   end
 end
 
@@ -99,11 +119,6 @@ namespace "extract" do
   task :raw do
     run_task(:extract, :raw, "Extracting data from SQLite to raw tsv")
   end
-
-  desc "Clean the data, removing wrong attempts and useless variables"
-  task :clean => :raw do
-    run_task(:extract, :clean, "Cleaning raw tsv")
-  end
 end
 
 # TRANSFORM DATA TASKS
@@ -112,7 +127,7 @@ task :transform => ["transform:euclid","transform:accel"]
 
 namespace "transform" do
   desc "Expand the featureset with the Euclidean Distance classifier features"
-  task :euclid => ["extract:clean"] do
+  task :euclid => ["clean:columns"] do
     progress "Expanding featureset with euclidean classifier features" do
       ns = :transform
       task = :euclid
@@ -127,7 +142,7 @@ namespace "transform" do
   end
 
   desc "Compute and add the accelerometer features"
-  task :accel=> ["extract:clean"] do
+  task :accel=> ["clean:columns"] do
     run_task(:transform, :accel, "Adding accelerometer features")
   end
 end
@@ -154,7 +169,7 @@ namespace "summarize" do
   end
 
   desc "Produce stats on data collected for specific pins"
-  task :pins => ["extract:clean"] do
-    puts `summary/pin_stats.rb --in_file=#{out_path(:extract,:clean)}`
+  task :pins => ["clean:columns"] do
+    puts `summary/pin_stats.rb --in_file=#{out_path(:clean,:columns)}`
   end    
 end
