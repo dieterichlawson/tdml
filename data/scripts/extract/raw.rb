@@ -33,6 +33,8 @@ end
 
 files = Dir.glob(File.join(Settings.in_file, "*.db"))
 
+puts COL_NAMES.join "\t"
+
 files.each do |file|
   db = SQLite3::Database.new file
   db.execute("SELECT id, username, pin FROM people") do |person|

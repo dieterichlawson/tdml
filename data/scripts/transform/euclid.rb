@@ -46,6 +46,8 @@ File.open(Settings.in_file, "r") do |file_handle|
       end
       seen_header = true
     else
+      accel = cols.index "ACCEL"
+      cols = cols[0..accel-1]
       (2..NUM_TAPS).each do |tnum|
         cols << duration_for_tap(cols,tnum-1) + latency_for_tap(cols,tnum) if Settings.press_to_press
         cols << latency_for_tap(cols,tnum) + duration_for_tap(cols,tnum) if Settings.release_to_release
