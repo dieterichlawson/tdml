@@ -30,5 +30,13 @@ File.open(Settings.in_file, "r") do |file_handle|
     people_per_pin[pin].add person
   end
 end
+puts "***** Pin Stats *****"
+puts "Number of pins: #{attempts_per_pin.size}"
+puts "Attempts per pin:"
 ap attempts_per_pin
+puts "People per pin:"
+people_per_pin.each do |pin, people|
+  puts "#{pin}: #{people.size}"
+end
+puts "Specific people per pin:"
 ap people_per_pin
