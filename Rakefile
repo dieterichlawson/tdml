@@ -7,7 +7,7 @@ $paths = {
   extract: { 
     raw: {
       path: "scratch",
-      in_file: "tapdynamics.db", 
+      in_file: "sql_databases", 
       out: "taps_raw.tsv",
     }, 
     clean: {
@@ -92,7 +92,7 @@ end
 # EXTRACT DATA TASKS
 
 desc "Run all extract tasks"
-task :extract  => ["extract:accel"]
+task :extract  => ["extract:clean"]
 namespace "extract" do
   
   desc "Extract the sqlite database into a tsv"
@@ -107,6 +107,8 @@ namespace "extract" do
 end
 
 # TRANSFORM DATA TASKS
+desc "Run all transform tasks"
+task :transform => ["transform:euclid","transform:accel"]
 
 namespace "transform" do
   desc "Expand the featureset with the Euclidean Distance classifier features"

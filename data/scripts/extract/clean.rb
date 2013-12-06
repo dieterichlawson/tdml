@@ -38,13 +38,13 @@ File.open(Settings.in_file, "r") do |file_handle|
     file_handle.each_line do |line|
       cols = line.split(DELIM)
       if seen_header && !Settings.keep_wrong && cols[PIN] != cols[ENTERED_PIN][0..PIN_LENGTH-1] 
-        $stderr.puts "#{cols[0]} entered their pin wrong... tossing"
+        $stderr.puts "#{cols[0][0..7]} entered their pin wrong... tossing"
         next
       end
      
       length = cols.index ACCEL_DELIM
       if seen_header && length  != IN_NUM_COLS
-        $stderr.puts "#{cols[0]} is weird (too many cols)"
+        $stderr.puts "#{cols[0][0..7]} is weird (too many cols)"
         next
       end
       
