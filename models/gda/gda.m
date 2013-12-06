@@ -16,7 +16,9 @@ addpath('../analysis_tools');
 % Row 1 = pins
 % Row 2 = false positive rate
 % Row 3 = false negative rate
-evaluation_table = zeros(3,length(pins));
+% Row 4 = test error rate
+% Row 5 = train error rate
+evaluation_table = zeros(5,length(pins));
 pin_col = 1;
 
 for p = pins'
@@ -37,6 +39,9 @@ for p = pins'
         % and then takes col's 3 -> end (1 = name, 2 = pin)
         data_for_i = get_features_for_user(data_pin_p, i);
         
+        if(size(data_for_i,1) < 20) 
+            continue;
+        end
         % Build training and test data for this particular pin by merging the
         % first 15 attempts for all user's with pin p into training_data and
         % then merging the remaining 15 attempts for all user's with pin p into
@@ -60,7 +65,10 @@ for p = pins'
     gda_fp_for_p = [];
     gda_fn_for_p = [];
     
-    
+    train_count = 0;
+    train_error = 0;
+    test_count = 0;
+    test_error = 0;
     
     % Make and test classifier for each user
     for i = users_pin_p'
@@ -85,13 +93,14 @@ for p = pins'
         % Get predictions from matlab function
         % lnr_pred = predict(lnr_mdl, test_data);
         gda_pred = predict(gda_mdl, test_data);
+        gda_pred_train = predict(gda_mdl, training_data);
         
         user_i_fp = 0;
         user_i_fn = 0;
         % Evaluate against true_test_labels
-        % lnr_errors = 0;
         for j=1:length(gda_pred)
             if(gda_pred(j) ~= user_i_test_labels(j))
+                test_error = test_error + 1;
                 % If we labeled an incorrect 0, then we incorrectly said
                 % example was an attacker (false positive)
                 if(gda_pred(j) == 0)
@@ -103,14 +112,19 @@ for p = pins'
                 end
             end
             
-            % if(lnr_pred(j) ~= user_i_test_labels(j))
-            %    lnr_errors = lnr_errors + 1;
-            % end
+            test_count = test_count + 1;
         end
         
         gda_fp_for_p = [gda_fp_for_p, user_i_fp/length(gda_pred)];
         gda_fn_for_p = [gda_fn_for_p, user_i_fn/length(gda_pred)];
-        % lnr_error_rate = lnr_errors / length(lnr_pred);
+        
+        % COMPUTE TRAINING ERROR
+        for j=1:length(gda_pred_train)
+            if(gda_pred_train(j) ~= user_i_training_labels(j))
+                train_error = train_error + 1;
+            end
+            train_count = train_count + 1;
+        end
     end
     
     % Set the PIN entry for this pin
@@ -120,11 +134,13 @@ for p = pins'
     % Set the average FN rate for this pin
     evaluation_table(3, pin_col) = sum(gda_fn_for_p)/length(gda_fp_for_p);
     
-    %     disp(['For pin = ' num2str(p) ' the fn rates (called attacker the true user) = ']);
-    %     disp(gda_fn_for_p);
-    %     disp(['For pin = ' num2str(p) ' the fp rates (caller a true user an attacker) = ']);
-    %     disp(gda_fp_for_p);
-    %     disp('**********************************************************');
+    % Test error
+    evaluation_table(4, pin_col) = test_error / test_count;
+    evaluation_table(5, pin_col) = train_error / train_count;
+    
+    disp(['For pin = ' num2str(p) ' the total # errors =  ' num2str(test_error) ' the total count = ' num2str(test_count)]);
+    
+    
     pin_col = pin_col + 1;
 end
 
