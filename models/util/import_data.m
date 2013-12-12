@@ -14,3 +14,5 @@ users = unique(user_label_vector);
 
 % Get list of all unique pins in data
 pins = unique(data(:,2));
+
+NUM_NEG_TRAIN = 125;

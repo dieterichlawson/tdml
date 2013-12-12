@@ -18,7 +18,7 @@ addpath('../analysis_tools');
 % Row 3 = false negative rate
 % Row 4 = test error rate
 % Row 5 = train error rate
-evaluation_table = zeros(5,length(pins));
+evaluation_table = zeros(5,length(pins)+1);
 pin_col = 1;
 
 for p = pins'    
@@ -33,7 +33,7 @@ for p = pins'
     test_error = 0;
     
     for i = users_pin_p'
-        [training_data, training_labels, test_data, test_labels] = makeTestAndTrainData(data_pin_p, i, 100);
+        [training_data, training_labels, test_data, test_labels] = makeTestAndTrainData(data_pin_p, i, NUM_NEG_TRAIN);
         
         %Get models from matlab function on training data
         svm_mdl = svmtrain(training_data, training_labels);
@@ -42,14 +42,8 @@ for p = pins'
         svm_pred_train = svmclassify(svm_mdl, training_data);
         
         [user_i_fp, user_i_fn] = evaluatePerf(svm_pred, test_labels);
-        disp(user_i_fp);
-        disp(user_i_fn);
         
-        %[X,Y] = perfcurve(user_i_test_labels, gda_pred, 0);
-        %plot(X,Y)
-        %xlabel('False positive rate'); ylabel('True positive rate');
-        
-        svm_fa_for_p = [svm_fa_for_p, user_i_fp/(length(svm_pred)-15)];
+        svm_fa_for_p = [svm_fa_for_p, user_i_fp/(length(svm_pred)-sum(test_labels))];
         svm_fr_for_p = [svm_fr_for_p, user_i_fn/sum(test_labels)];
         
         test_error_vector = abs(svm_pred - test_labels);
