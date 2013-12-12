@@ -1,9 +1,7 @@
 clear;
-imp = importdata('../../data/taps.csv',',',1);
+imp = importdata('../../data/gold/taps_accel.csv',',',1);
 names = imp.textdata(2:end,1);
-% data is poorly conditioned because of extra
-% features at the end, so remove them
-all_data = [grp2idx(names) imp.data(:,1:end-8)];
+all_data = [grp2idx(names) imp.data(:,1:end)];
 
 pins = unique(all_data(:,2));
 num_folds = 4;

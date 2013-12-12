@@ -1,0 +1,31 @@
+05-Dec-2013 23:06:18
+
+***** Training classifiers for pin 1111 *****
+Number of people: 11 Number of enrollments: 349
+False positive rate: 0.0037
+False negative rate: 0.1748
+Correct rate: 0.9807
+
+***** Training classifiers for pin 1212 *****
+Number of people: 9 Number of enrollments: 303
+False positive rate: 0.0029
+False negative rate: 0.1881
+Correct rate: 0.9765
+
+***** Training classifiers for pin 1234 *****
+Number of people: 13 Number of enrollments: 388
+False positive rate: 0.0006
+False negative rate: 0.1598
+Correct rate: 0.9871
+
+***** Training classifiers for pin 2419 *****
+Number of people: 10 Number of enrollments: 316
+False positive rate: 0.0021
+False negative rate: 0.1171
+Correct rate: 0.9864
+
+***** Training classifiers for pin 3637 *****
+Number of people: 11 Number of enrollments: 337
+False positive rate: 0.0021
+False negative rate: 0.1869
+Correct rate: 0.9811
