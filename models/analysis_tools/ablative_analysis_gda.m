@@ -14,6 +14,12 @@ total_col = size(data, 2);
 col_per_tap = 3;
 original_data = data;
 
+% Fetch columns 1 - 16 to ablate the accelerometer data
+data = data(:, 1:16);
+no_accel_data = data;
+run('../gda/gda.m');
+no_accel_eval = evaluation_table;
+
 % Create data matrix with all DURATIONS removed
 ablate_col = 3;
 while ablate_col <= total_col
@@ -24,30 +30,30 @@ data = data(:,any(data,1));
 run('../gda/gda.m');
 no_duration_eval = evaluation_table;
 
-% Create data matrix with all SIZES removed
-data = original_data;
-ablate_col = 4;
-while ablate_col <= total_col
-    data(:,ablate_col) = 0;
-    ablate_col = ablate_col + col_per_tap;
-end
-data = data(:,any(data,1));
-run('../gda/gda.m');
-no_size_eval = evaluation_table;
-
-% Create data matrix with all LATENCIES removed
-data = original_data;
-ablate_col = 5;
-while ablate_col <= total_col
-    data(:,ablate_col) = 0;
-    ablate_col = ablate_col + col_per_tap;
-end
-data = data(:,any(data,1));
-run('../gda/gda.m');
-no_latency_eval = evaluation_table;
+% % Create data matrix with all SIZES removed
+% data = original_data;
+% ablate_col = 4;
+% while ablate_col <= total_col
+%     data(:,ablate_col) = 0;
+%     ablate_col = ablate_col + col_per_tap;
+% end
+% data = data(:,any(data,1));
+% run('../gda/gda.m');
+% no_size_eval = evaluation_table;
+% 
+% % Create data matrix with all LATENCIES removed
+% data = original_data;
+% ablate_col = 5;
+% while ablate_col <= total_col
+%     data(:,ablate_col) = 0;
+%     ablate_col = ablate_col + col_per_tap;
+% end
+% data = data(:,any(data,1));
+% run('../gda/gda.m');
+% no_latency_eval = evaluation_table;
 
 % Create data matrix with all LATENCIES AND DURATIONS removed
-data = original_data;
+data = no_accel_data;
 ablate_lat = 5;
 ablate_dur = 3;
 while ablate_lat <= total_col
@@ -60,5 +66,11 @@ data = data(:,any(data,1));
 run('../gda/gda.m');
 only_size = evaluation_table;
 
-ablative_analysis_table = [original_eval; no_duration_eval; no_size_eval; no_latency_eval; only_size];
+% Remove columns 1 - 16 to ablate everything BUT the accelerometer data
+data = original_data(:, [1:2 17:end]);
+run('../gda/gda.m');
+only_accel = evaluation_table;
+
+%ablative_analysis_table = [original_eval; no_accel_eval; no_duration_eval; no_size_eval; no_latency_eval; only_size];
+ablative_analysis_table = [original_eval; no_accel_eval; no_duration_eval; only_size; only_accel];
 csvwrite('ablative_analysis.csv', ablative_analysis_table);
