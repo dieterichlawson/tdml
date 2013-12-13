@@ -33,7 +33,7 @@ for p = pins'
     test_error = 0;
     
     for i = users_pin_p'
-        [training_data, training_labels, test_data, test_labels] = makeTestAndTrainData(data_pin_p, i, NUM_NEG_TRAIN);
+        [training_data, training_labels, test_data, test_labels] = makeTestAndTrainData(data_pin_p, i, 35);
         
         % Get models from matlab function on training data
         gda_mdl = ClassificationDiscriminant.fit(training_data, training_labels);
@@ -70,7 +70,7 @@ for p = pins'
     evaluation_table(4, pin_col) = test_error / test_count;
     evaluation_table(5, pin_col) = train_error / train_count;
     
-    disp(['For pin = ' num2str(p) ' the total # errors =  ' num2str(test_error) ' the total count = ' num2str(test_count)]);
+    % disp(['For pin = ' num2str(p) ' the total # errors =  ' num2str(test_error) ' the total count = ' num2str(test_count)]);
     
     pin_col = pin_col + 1;
 end

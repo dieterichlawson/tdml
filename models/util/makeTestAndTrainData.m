@@ -22,8 +22,8 @@ pos_test_labels = ones(size(pos_test_data, 1), 1);
 % neg_test_data(neg_indices, :) = [];
 % neg_test_labels = zeros(size(neg_test_data, 1), 1);
 
-% 125 is just the standin value for the full neg set
-if(train_size == 125)
+% 150 is just the standin value for the full neg set
+if(train_size == 150)
     neg_train_data = neg_features(1:2:end, :);
     neg_train_labels = zeros(size(neg_train_data, 1), 1);
     neg_test_data = neg_features(2:2:end, :);
@@ -35,11 +35,6 @@ else
     neg_test_data = neg_features;
     neg_test_data(neg_indices, :) = [];
     neg_test_labels = zeros(size(neg_test_data, 1), 1);
-    
-    if(train_size == 30)
-        csvwrite('train30.csv', neg_train_data);
-        csvwrite('test30.csv', neg_test_data);
-    end
 end
 
 % disp(size(neg_train_data,1));
