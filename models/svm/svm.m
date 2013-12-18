@@ -26,6 +26,8 @@ for p = pins'
     
     svm_fa_for_p = [];
     svm_fr_for_p = [];
+    train_fa = [];
+    train_fr = [];
     
     train_count = 0;
     train_error = 0;
@@ -41,15 +43,18 @@ for p = pins'
         svm_pred = svmclassify(svm_mdl, test_data);
         svm_pred_train = svmclassify(svm_mdl, training_data);
         
-        [user_i_fp, user_i_fn] = evaluatePerf(svm_pred, test_labels);
+        [user_i_fa, user_i_fr] = evaluatePerf(svm_pred, test_labels);
         
-        svm_fa_for_p = [svm_fa_for_p, user_i_fp/(length(svm_pred)-sum(test_labels))];
-        svm_fr_for_p = [svm_fr_for_p, user_i_fn/sum(test_labels)];
+        svm_fa_for_p = [svm_fa_for_p, user_i_fa/(length(svm_pred)-sum(test_labels))];
+        svm_fr_for_p = [svm_fr_for_p, user_i_fr/sum(test_labels)];
+        
+        [train_i_fa, train_i_fr] = evaluatePerf(svm_pred_train, training_labels);
+        train_fa = [train_fa, train_i_fa/(length(svm_pred_train)-sum(training_labels))];
+        train_fr = [train_fr, train_i_fr/sum(training_labels)];
         
         test_error_vector = abs(svm_pred - test_labels);
         test_error = test_error + sum(test_error_vector);
         test_count = test_count + length(svm_pred);
-        
         train_error_vector = abs(svm_pred_train - training_labels);
         train_error = train_error + sum(train_error_vector);
         train_count = train_count + length(svm_pred_train);
@@ -61,12 +66,16 @@ for p = pins'
     evaluation_table(2, pin_col) = sum(svm_fa_for_p)/length(svm_fa_for_p);
     % Set the average FR rate for this pin
     evaluation_table(3, pin_col) = sum(svm_fr_for_p)/length(svm_fr_for_p);
-    % evaluation_table(3, pin_col) = sum(svm_fn_for_p)/15;
-    % Test error
-    evaluation_table(4, pin_col) = test_error / test_count;
-    evaluation_table(5, pin_col) = train_error / train_count;
+    evaluation_table(4, pin_col) = sum(train_fa)/length(train_fa);
+    evaluation_table(5, pin_col) = sum(train_fr)/length(train_fr);
     
     % disp(['For pin = ' num2str(p) ' the total # errors =  ' num2str(test_error) ' the total count = ' num2str(test_count)]);
     
     pin_col = pin_col + 1;
 end
+
+evaluation_table(2, length(pins) + 1) = sum(evaluation_table(2,:))/length(pins);
+evaluation_table(3, length(pins) + 1) = sum(evaluation_table(3,:))/length(pins);
+evaluation_table(4, length(pins) + 1) = sum(evaluation_table(4,:))/length(pins);
+evaluation_table(5, length(pins) + 1) = sum(evaluation_table(5,:))/length(pins);
+csvwrite('svm_full_features.csv', evaluation_table);

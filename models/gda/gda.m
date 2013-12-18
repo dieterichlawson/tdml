@@ -26,6 +26,8 @@ for p = pins'
     
     gda_fa_for_p = [];
     gda_fr_for_p = [];
+    train_fa = [];
+    train_fr = [];
     
     train_count = 0;
     train_error = 0;
@@ -33,7 +35,7 @@ for p = pins'
     test_error = 0;
     
     for i = users_pin_p'
-        [training_data, training_labels, test_data, test_labels] = makeTestAndTrainData(data_pin_p, i, 35);
+        [training_data, training_labels, test_data, test_labels] = makeTestAndTrainData(data_pin_p, i, NUM_NEG_TRAIN);
         
         % Get models from matlab function on training data
         gda_mdl = ClassificationDiscriminant.fit(training_data, training_labels);
@@ -44,12 +46,12 @@ for p = pins'
         
         [user_i_fa, user_i_fr] = evaluatePerf(gda_pred, test_labels);
         
-        %[X,Y] = perfcurve(user_i_test_labels, gda_pred, 0);
-        %plot(X,Y)
-        %xlabel('False positive rate'); ylabel('True positive rate');
-        
         gda_fa_for_p = [gda_fa_for_p, user_i_fa/(length(gda_pred)-sum(test_labels))];
         gda_fr_for_p = [gda_fr_for_p, user_i_fr/sum(test_labels)];
+        
+        [train_i_fa, train_i_fr] = evaluatePerf(gda_pred_train, training_labels);
+        train_fa = [train_fa, train_i_fa/(length(gda_pred_train)-sum(training_labels))];
+        train_fr = [train_fr, train_i_fr/sum(training_labels)];
         
         test_error_vector = abs(gda_pred - test_labels);
         test_error = test_error + sum(test_error_vector);
@@ -67,10 +69,16 @@ for p = pins'
     % Set the average FR rate for this pin
     evaluation_table(3, pin_col) = sum(gda_fr_for_p)/length(gda_fr_for_p);
     % Test error
-    evaluation_table(4, pin_col) = test_error / test_count;
-    evaluation_table(5, pin_col) = train_error / train_count;
+    evaluation_table(4, pin_col) = sum(train_fa)/length(train_fa);
+    evaluation_table(5, pin_col) = sum(train_fr)/length(train_fr);
     
     % disp(['For pin = ' num2str(p) ' the total # errors =  ' num2str(test_error) ' the total count = ' num2str(test_count)]);
     
     pin_col = pin_col + 1;
 end
+
+evaluation_table(2, length(pins) + 1) = sum(evaluation_table(2,:))/length(pins);
+evaluation_table(3, length(pins) + 1) = sum(evaluation_table(3,:))/length(pins);
+evaluation_table(4, length(pins) + 1) = sum(evaluation_table(4,:))/length(pins);
+evaluation_table(5, length(pins) + 1) = sum(evaluation_table(5,:))/length(pins);
+csvwrite('gda_full_features.csv', evaluation_table);
